@@ -14,7 +14,7 @@ class App extends Component {
       character: { info: {}, results: [] },
       location: { info: {}, results: [] },
       episode: { info: {}, results: [] },
-      // isLoaded: false
+      isLoaded: false,
       pageName: 'character/'
     };
     this.loadCharacters = this.loadCharacters.bind(this);
@@ -29,7 +29,7 @@ class App extends Component {
     fetch(api + 'character/').then(result => result.json()).then(data => {
       this.setState({
         character: data,
-        // isLoaded: true
+        isLoaded: true
       });
     })
       .catch(err => console.log(err));
@@ -39,7 +39,10 @@ class App extends Component {
   loadLocations() {
     this.setState({ pageName: 'location' })
     fetch(api + 'location').then(result => result.json()).then(data => {
-      this.setState({ location: data });
+      this.setState({
+        location: data,
+        isLoaded: true
+      });
       console.log(data);
     })
       .catch(err => console.log(err));
@@ -49,7 +52,10 @@ class App extends Component {
   loadEpisodes() {
     this.setState({ pageName: 'episode' })
     fetch(api + 'episode').then(result => result.json()).then(data => {
-      this.setState({ episode: data });
+      this.setState({
+        episode: data,
+        isLoaded: true
+      });
       console.log(data);
     })
       .catch(err => console.log(err));
@@ -58,17 +64,29 @@ class App extends Component {
   getPage() {
     switch (this.state.pageName) {
       case 'character/':
-        return <Characters
-          userData={this.state.character}
-          loadMore={(this.loadMore)} />;
+          return <Characters
+            userData={this.state.character}
+            loadMore={this.loadMore}
+            isLoaded={this.state.isLoaded} />;
       case 'location':
-        return <Locations
-          locationData={this.state.location}
-          loadMore={(this.loadMore)} />;
+        if (this.state.isLoaded) {
+          return <Locations
+            locationData={this.state.location}
+            loadMore={this.loadMore}
+            isLoaded={this.state.isLoaded} />;
+        } else {
+          return <div>Loading...</div>
+        }
       case 'episode':
-        return <Episodes
-          episodeData={this.state.episode}
-          loadMore={(this.loadMore)} />;
+        if (this.state.isLoaded) {
+          return <Episodes
+            episodeData={this.state.episode}
+            loadMore={this.loadMore}
+            isLoaded={this.state.isLoaded} />;
+
+        } else {
+          return <div>Loading...</div>
+        }
     }
   }
 
