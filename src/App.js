@@ -31,7 +31,6 @@ class App extends Component {
         character: data,
         // isLoaded: true
       });
-      console.log(data);
     })
       .catch(err => console.log(err));
   }
@@ -75,16 +74,22 @@ class App extends Component {
 
   loadNext() {
     const page = this.state.pageName.replace('/', '');
-    fetch(this.state[page].info.next).then(result => result.json()).then(data => {
-      this.setState({[page]: data})
-    })
+    if (this.state[page].info.next) {
+      fetch(this.state[page].info.next).then(result => result.json()).then(data => {
+        this.setState({ [page]: data })
+      })
+    }
   }
 
   loadPrev() {
     const page = this.state.pageName.replace('/', '');
-    fetch(this.state[page].info.prev).then(result => result.json()).then(data => {
-      this.setState({[this.state.pageName.replace('/', '')]: data})
-    })
+    if (this.state[page].info.prev) {
+      fetch(this.state[page].info.prev).then(result => result.json()).then(data => {
+        this.setState({ [page]: data })
+      }).catch((err) => {
+        console.log(err);
+      })
+    }
   }
 
 
